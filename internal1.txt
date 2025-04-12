@@ -1,0 +1,109 @@
+Q.1 There is an online system like ganna.com. The customer can purchase the tracks and songs from movies online. Create
+the following tables in SQL with primary key and foreign key constraint. Insert 6-8 records in tables. [05]
+
+Songs (SongID, Title (e.g ‘tumhiho’), movie, genre(e.g. party, bhakti, relaxing, meditation), main_singer (e.g
+Arijit), price (e.g. 50,100) )
+
+ANS. :
+CREATE TABLE SONGS (
+    SONGID INTEGER PRIMARY KEY,
+    TITLE VARCHAR(20),
+    MOVIE VARCHAR(20),
+    GENRE VARCHAR(20),
+    MAIN_SINGER VARCHAR(20),
+    PRICE INTEGER CHECK (PRICE > 0)
+);
+
+Subscribe (PaymentID, SongID, CustomerEmail, Paymenttype (CC,DC, Cash))
+
+ANS. :
+CREATE TABLE SUBSCRIBE (
+    PAYMENTID INTEGER PRIMARY KEY,
+    SONGID INTEGER,
+    CUSTOMEREMAIL VARCHAR(20),
+    PAYMENTTYPE VARCHAR(5) CHECK (PAYMENTTYPE IN ('CC','DC','CASH')),
+    FOREIGN KEY(SONGID) REFERENCES SONGS(SONGID),
+    FOREIGN KEY(CUSTOMEREMAIL) REFERENCES CUSTOMER(CUSTOMEREMAIL)
+);
+
+Customer (CustomerEmail, name, city, gender)
+
+ANS. :
+CREATE TABLE CUSTOMER (
+    CUSTOMEREMAIL VARCHAR(20) PRIMARY KEY,
+    NAME VARCHAR(20) NOT NULL,
+    CITY VARCHAR(20),
+    GENDER VARCHAR(20) CHECK (GENDER IN ('MALE','FEMALE','OTHER'))
+);
+
+//VALUES
+
+INSERT ALL
+INTO SONGS VALUES(1,'PERFECT','','RELAXING','ED','500')
+INTO SONGS VALUES(2,'JAY','CHHAVA','BHAKTI','ARIJIT','100')
+INTO SONGS VALUES(3,'SHAPE OF YOU','','PARTY','ED','250')
+INTO SONGS VALUES(4,'RAM RAM','CHHAVA','MEDITATION','SONU','50')
+INTO SONGS VALUES(5,'CHOO LO','','RELAXING','JAIN','50')
+INTO SONGS VALUES(6,'BIG STEPPER','','PARTY','KIND','500')
+SELECT * FROM DUAL;
+
+INSERT ALL 
+INTO CUSTOMER VALUES('abhay@gmail.com','ABHAY','SURAT','MALE')
+INTO CUSTOMER VALUES('ram@gmail.com','RAM','SURAT','MALE')
+INTO CUSTOMER VALUES('raj@gmail.com','RAJ','SURAT','MALE')
+INTO CUSTOMER VALUES('rahul@gmail.com','RAHUL','SURAT','MALE')
+INTO CUSTOMER VALUES('disha@gmail.com','DISHA','SURAT','FEMALE')
+INTO CUSTOMER VALUES('bhuri@gmail.com','BHURI','SURAT','FEMALE')
+SELECT * FROM DUAL;
+
+INSERT ALL
+INTO SUBSCRIBE VALUES(1,1,'abhay@gmail.com','CASH')
+INTO SUBSCRIBE VALUES(2,2,'ram@gmail.com','CC')
+INTO SUBSCRIBE VALUES(3,3,'raj@gmail.com','DC')
+INTO SUBSCRIBE VALUES(4,4,'bhuri@gmail.com','CASH')
+INTO SUBSCRIBE VALUES(5,5,'rahul@gmail.com','CC')
+INTO SUBSCRIBE VALUES(6,6,'disha@gmail.com','CASH')
+INTO SUBSCRIBE VALUES(7,3,'abhay@gmail.com','DC')
+INTO SUBSCRIBE VALUES(8,6,'rahul@gmail.com','CASH')
+SELECT * FROM DUAL;
+
+Solve the following queries through SQL Command Prompt: [20]
+
+11. Find the song which is subscribed by customer maximum.
+
+ANS. :
+SELECT S.SONGID,S.TITLE,COUNT(*) AS TOTAL_SUBSCRIBED
+FROM SUBSCRIBE SB,SONGS S 
+WHERE SB.SONGID = S.SONGID
+GROUP BY S.SONGID,S.TITLE
+HAVING COUNT(*) = (
+    SELECT MAX(COUNT(*))
+    FROM SUBSCRIBE
+    GROUP BY SONGID
+);
+
+12. Count total number of songs by each singer
+
+ANS. :
+SELECT MAIN_SINGER , COUNT(*)
+FROM SONGS
+GROUP BY MAIN_SINGER;
+
+13. List the customer who have subscribed any song of movie ‘chaava’
+
+ANS. :
+SELECT C.NAME,S.TITLE,S.MOVIE
+FROM CUSTOMER C , SUBSCRIBE SB , SONGS S 
+WHERE C.CUSTOMEREMAIL = SB.CUSTOMEREMAIL AND SB.SONGID = S.SONGID AND MOVIE = 'CHHAVA'; 
+
+14. List the song which is subscribed through cash payment method.
+
+ANS. :
+
+
+15. Find total collection of party type of songs.
+
+ANS. :
+SELECT SUM(S.PRICE) AS TOTAL_COLLECTION 
+FROM SONGS S,SUBSCRIBE SB 
+WHERE S.SONGID = SB.SONGID AND S.GENRE = 'PARTY';

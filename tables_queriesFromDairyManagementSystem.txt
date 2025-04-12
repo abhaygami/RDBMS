@@ -1,0 +1,362 @@
+1) FACTORY TABLE
+
+CREATE TABLE FACTORY (
+    FACTORYID INTEGER PRIMARY KEY,
+    NAME VARCHAR(50),
+    ADDRESS VARCHAR(50),
+    LICENSEID VARCHAR(50) UNIQUE
+);
+
+INSERT ALL 
+INTO FACTORY VALUES (101, 'Amul Dairy', 'Anand, Gujarat', 'LIC123')
+INTO FACTORY VALUES(102, 'Mother Dairy', 'Delhi, India', 'LIC124')
+INTO FACTORY VALUES(103, 'Hatsun Agro', 'Tamil Nadu, India', 'LIC125')
+INTO FACTORY VALUES(104, 'Nestle Dairy', 'Maharashtra, India', 'LIC126')
+INTO FACTORY VALUES(105, 'Govind Dairy', 'Pune, India', 'LIC127')
+SELECT * FROM DUAL;
+
+2) MACHINERY TABLE
+
+CREATE TABLE MACHINERY (
+    MACHINERYID INTEGER PRIMARY KEY,
+    TYPE VARCHAR(50),
+    PRICE DECIMAL(10,2),
+    FACTORYID INTEGER,
+    FOREIGN KEY (FACTORYID) REFERENCES FACTORY(FACTORYID)
+);
+
+INSERT ALL
+INTO MACHINERY VALUES (201, 'Milk Pasteurizer', 75000.00, 101)
+INTO MACHINERY VALUES (202, 'Cheese Processor', 50000.00, 101)
+INTO MACHINERY VALUES (203, 'Butter Churner', 120000.00, 102)
+INTO MACHINERY VALUES (204, 'Homogenizer', 95000.00, 102)
+INTO MACHINERY VALUES (205, 'Cream Separator', 110000.00, 103)
+INTO MACHINERY VALUES (206, 'Milk Analyzer', 60000.00, 103)
+SELECT * FROM DUAL;
+
+3) EMPLOYEE TABLE
+
+CREATE TABLE EMPLOYEE (
+    EMPLOYEEID INTEGER PRIMARY KEY,
+    FULLNAME VARCHAR(50),
+    DOB DATE,
+    AGE INTEGER,
+    PHONENO VARCHAR(10),
+    FACTORYID INTEGER,
+    TYPE VARCHAR(50),
+    FOREIGN KEY (FACTORYID) REFERENCES FACTORY(FACTORYID)
+);
+
+INSERT ALL
+INTO EMPLOYEE VALUES (301, 'Rahul Sharma', '15-JUN-1985', 39, '9812345678', 101, 'Engineer')
+INTO EMPLOYEE VALUES (302, 'Pooja Mehta', '20-SEP-1990', 34, '9876543210', 101, 'Technician')
+INTO EMPLOYEE VALUES (303, 'Anil Kumar', '25-MAR-1980', 44, '9823456789', 102, 'Engineer')
+INTO EMPLOYEE VALUES (304, 'Suresh Patil', '10-DEC-1995', 29, '9801234567', 103, 'Technician')
+INTO EMPLOYEE VALUES (305, 'Manoj Tiwari', '05-JUL-1978', 46, '9898765432', 104, 'Engineer')
+INTO EMPLOYEE VALUES (306, 'Nisha Yadav', '15-APR-1982', 42, '9832145678', 105, 'Supervisor')
+SELECT * FROM DUAL;
+
+4) PRODUCT TABLE
+
+CREATE TABLE PRODUCT (
+    PRODUCTID INTEGER PRIMARY KEY,
+    PRODUCTNAME VARCHAR(50),
+    CGST DECIMAL(5,2),
+    SGST DECIMAL(5,2),
+    IGST DECIMAL(5,2),
+    STORAGEID INTEGER,
+    PRODUCTTYPE VARCHAR(100),
+    FOREIGN KEY (STORAGEID) REFERENCES STORAGE(STORAGEID)
+);
+
+INSERT ALL
+INTO PRODUCT VALUES (401, 'Toned Milk', 5.00, 5.00, 12.00, 501, 'Milk')
+INTO PRODUCT VALUES (402, 'Cheese', 6.00, 6.00, 12.00, 502, 'Dairy Product')
+INTO PRODUCT VALUES (403, 'Butter', 5.50, 5.50, 12.50, 503, 'Dairy Product')
+INTO PRODUCT VALUES (404, 'Flavored Milk', 7.00, 7.00, 14.00, 504, 'Milk Beverage')
+INTO PRODUCT VALUES (405, 'Curd', 4.50, 4.50, 10.00, 505, 'Dairy Product')
+SELECT * FROM DUAL;
+
+5) STORAGE TABLE
+
+CREATE TABLE STORAGE (
+    STORAGEID INTEGER PRIMARY KEY,
+    CAPACITY INTEGER,
+    TYPE VARCHAR(50),
+    SQUAREFTAREA DECIMAL(10,2)
+);
+
+INSERT ALL
+INTO STORAGE VALUES (501, 2000, 'Cold Storage', 5000.00)
+INTO STORAGE VALUES (502, 1500, 'Cold Storage', 4000.00)
+INTO STORAGE VALUES (503, 1800, 'General Storage', 4500.00)
+INTO STORAGE VALUES (504, 2200, 'Cold Storage', 5200.00)
+INTO STORAGE VALUES (505, 2500, 'General Storage', 6000.00)
+SELECT * FROM DUAL;
+
+6) WHOLESALER TABLE
+
+CREATE TABLE WHOLESALER (
+    WHOLESALERID INTEGER PRIMARY KEY,
+    NAME VARCHAR(50) NOT NULL,
+    GSTNO VARCHAR(50) UNIQUE,
+    STORAGEID INTEGER,
+    FOREIGN KEY (STORAGEID) REFERENCES STORAGE(STORAGEID)
+);
+
+INSERT ALL
+INTO WHOLESALER VALUES (601, 'Vishal Dairy Distributors', 'GST12345', 501)
+INTO WHOLESALER VALUES (602, 'Raj Milk Traders', 'GST67890', 502)
+INTO WHOLESALER VALUES (603, 'Shree Dairy Suppliers', 'GST54321', 504)
+SELECT * FROM DUAL;
+
+7) CUSTOMER TABLE
+
+CREATE TABLE CUSTOMER (
+    CUSTOMERID INTEGER PRIMARY KEY,
+    NAME VARCHAR(50),
+    PHONENUMBER VARCHAR(10),
+    EMAIL VARCHAR(50),
+    DOB DATE,
+    AGE INTEGER CHECK (AGE > 0)
+);
+
+INSERT ALL
+INTO CUSTOMER VALUES (701, 'Ramesh Gupta', '9811111111', 'ramesh@example.com', '12-MAY-1975', 49)
+INTO CUSTOMER VALUES (702, 'Seema Verma', '9822222222', 'seema@example.com', '22-AUG-1982', 42)
+INTO CUSTOMER VALUES (703, 'Arun Nair', '9833333333', 'arun@example.com', '30-NOV-1979', 45)
+INTO CUSTOMER VALUES (704, 'Priya Shah', '9844444444', 'priya@example.com', '25-JUN-1990', 34)
+INTO CUSTOMER VALUES (705, 'Vikram Rao', '9898888888', 'vikram@example.com', '14-FEB-1983', 41)
+SELECT * FROM DUAL;
+
+8) EMPLOYEE_MACHINERY TABLE
+
+CREATE TABLE EMPLOYEE_MACHINERY (
+    EMPLOYEE_MACHINERY_ID INTEGER PRIMARY KEY,
+    MACHINERYID INTEGER,
+    EMPLOYEEID INTEGER,
+    FOREIGN KEY (MACHINERYID) REFERENCES MACHINERY(MACHINERYID),
+    FOREIGN KEY (EMPLOYEEID) REFERENCES EMPLOYEE(EMPLOYEEID)
+);
+
+INSERT ALL
+INTO EMPLOYEE_MACHINERY VALUES (801, 201, 301)
+INTO EMPLOYEE_MACHINERY VALUES (802, 202, 301)
+INTO EMPLOYEE_MACHINERY VALUES (803, 203, 303)
+INTO EMPLOYEE_MACHINERY VALUES (804, 204, 303)
+INTO EMPLOYEE_MACHINERY VALUES (805, 205, 305)
+INTO EMPLOYEE_MACHINERY VALUES (806, 206, 304)
+SELECT * FROM DUAL;
+
+
+*/  QUERIES
+
+1) Retrieve the names of all factories along with the type and price of machinery they own, ordered by machinery price in descending order.
+
+ANS. :
+
+SELECT F.FACTORYID,F.NAME,M.TYPE,M.PRICE
+FROM FACTORY F,MACHINERY M 
+WHERE F.FACTORYID = M.FACTORYID
+ORDER BY M.PRICE DESC;
+
+2) Show the names of employees who are assigned to machinery that costs more than 50,000.
+
+ANS. :
+
+SELECT E.EMPLOYEEID,E.FULLNAME,M.TYPE AS MACHINERY_TYPE,M.PRICE
+FROM EMPLOYEE E,MACHINERY M,EMPLOYEE_MACHINERY EM
+WHERE E.EMPLOYEEID = EM.EMPLOYEEID AND EM.MACHINERYID = M.MACHINERYID AND M.PRICE > 50000;
+
+3) Retrieve all customer names who are above 40 years old and have a phone number starting with '98'.
+
+ANS. :
+
+SELECT CUSTOMERID,NAME,AGE,PHONENUMBER
+FROM CUSTOMER
+WHERE CUSTOMERID IN (
+    SELECT CUSTOMERID
+    FROM CUSTOMER
+    WHERE AGE > 40 AND PHONENUMBER LIKE '98%'
+);
+
+4) Display the factory names along with the total number of employees in each factory, grouped by factory and only those factories having more than 1 employee.
+
+ANS. :
+
+SELECT F.NAME , COUNT(E.EMPLOYEEID) AS TOTAL_EMPLOYEE
+FROM FACTORY F,EMPLOYEE E 
+WHERE F.FACTORYID = E.FACTORYID
+GROUP BY F.NAME
+HAVING COUNT(EMPLOYEEID) > 1;
+
+5) Retrieve the product names along with the corresponding storage capacity for products stored in storage facilities having a type of 'Cold Storage'.
+
+ANS. :
+
+SELECT P.PRODUCTNAME , S.CAPACITY,S.TYPE AS STORAGE_TYPE
+FROM PRODUCT P , STORAGE S 
+WHERE P.STORAGEID = S.STORAGEID AND S.TYPE = 'Cold Storage';
+
+6) Show the total count of machinery present in each factory, ordered by the highest count first.
+
+ANS. :
+
+SELECT F.NAME,COUNT(M.MACHINERYID) AS TOTAL_MACHINERY 
+FROM  FACTORY F 
+LEFT JOIN MACHINERY M 
+ON F.FACTORYID = M.FACTORYID
+GROUP BY F.NAME
+ORDER BY COUNT(M.MACHINERYID) DESC;
+
+7) Retrieve customer names and their corresponding ages for customers who have the same age as any employee. (Using a Subquery)
+
+ANS. :
+
+SELECT NAME,AGE 
+FROM CUSTOMER 
+WHERE AGE IN (
+    SELECT AGE 
+    FROM EMPLOYEE
+);
+
+8) Find Customers Who Are Older Than the Average Age of All Customers (Using Subquery)
+
+ANS. :
+
+SELECT NAME , AGE
+FROM CUSTOMER 
+WHERE AGE > (
+    SELECT AVG(AGE) 
+    FROM CUSTOMER
+);
+
+9) Retrieve the names of factories that have machinery costing more than 20% above the average machinery price. (Using a Subquery)
+
+ANS. :
+
+SELECT NAME
+FROM FACTORY 
+WHERE FACTORYID IN (
+    SELECT FACTORYID
+    FROM MACHINERY
+    WHERE PRICE > (
+        SELECT AVG(PRICE)
+        FROM MACHINERY
+    ) * 1.2
+);
+
+10) Show the product names where the combined CGST, SGST, and IGST exceeds 18% greater then lowest tax consuming product. (Using a Subquery)
+
+ANS. :
+
+SELECT PRODUCTNAME , CGST + SGST + IGST AS TOTAL_TAX 
+FROM PRODUCT
+WHERE CGST+SGST+IGST > (
+    SELECT MIN(CGST+SGST+IGST) 
+    FROM PRODUCT
+) * 1.18;
+
+11) List the storage units that have a square footage greater than the average square footage across all storage units. (Using a Subquery)
+
+ANS. :
+
+SELECT * 
+FROM STORAGE 
+WHERE SQUAREFTAREA > (
+    SELECT AVG(SQUAREFTAREA) 
+    FROM STORAGE
+);
+
+12) Display the names of employeees who are assigned to machinery with a price greater than the maximum machinery price in Factory_ID = 103. (Using a Subquery)
+
+ANS. :
+
+SELECT E.FULLNAME
+FROM EMPLOYEE E
+JOIN EMPLOYEE_MACHINERY EM ON E.EMPLOYEEID = EM.EMPLOYEEID
+JOIN MACHINERY M ON EM.MACHINERYID = M.MACHINERYID
+WHERE M.PRICE > (SELECT MAX(PRICE) FROM MACHINERY WHERE FACTORYID = 103);
+
+13) Retrieve the names of wholesalers linked to storage units with a capacity greater than 1,000 units. (Using a JOIN)
+
+ANS. :
+
+SELECT W.NAME 
+FROM WHOLESALER W
+JOIN STORAGE S ON W.STORAGEID = S.STORAGEID
+WHERE S.CAPACITY > 1000;
+
+14) List employees working in a factory where at least one machinery costs more than ₹1,00,000. (Using a JOIN)
+
+ANS. :
+
+SELECT DISTINCT E.FULLNAME 
+FROM EMPLOYEE E , FACTORY F , MACHINERY M 
+WHERE E.FACTORYID = F.FACTORYID AND F.FACTORYID = M.FACTORYID AND M.PRICE > 100000;
+
+15) Retrieve the most tax consuming product stored in each storage unit. (Using a Subquery)
+
+ANS. :
+
+SELECT PRODUCTNAME , CGST + SGST + IGST AS TOTAL_TAX , STORAGEID
+FROM PRODUCT
+WHERE CGST+SGST+IGST = (
+    SELECT MAX(CGST+SGST+IGST) 
+    FROM PRODUCT
+);
+
+OUTPUT :
+
+16) List employees who operate machinery, including their names and the machinery they handle
+
+ANS. :
+
+SELECT E.FULLNAME AS EMPLOYEE_NAME , M.TYPE AS MACHINERY_TYPE
+FROM EMPLOYEE E,MACHINERY M,EMPLOYEE_MACHINERY EM
+WHERE E.EMPLOYEEID = EM.EMPLOYEEID AND M.MACHINERYID = EM.MACHINERYID;
+
+17) List all employees who are not assigned to any machinery. (Using JOIN)
+
+ANS. :
+
+SELECT E.FULLNAME 
+FROM EMPLOYEE E
+LEFT JOIN EMPLOYEE_MACHINERY EM ON E.EMPLOYEEID = EM.EMPLOYEEID
+WHERE EM.EMPLOYEEID IS NULL;
+
+18) Find employees who works on most expensive machinery. (Using a Subquery)
+
+ANS. :
+
+SELECT EMPLOYEEID , FULLNAME
+FROM EMPLOYEE
+WHERE EMPLOYEEID IN (
+    SELECT EMPLOYEEID
+    FROM EMPLOYEE_MACHINERY
+    WHERE MACHINERYID IN (
+        SELECT MACHINERYID
+        FROM MACHINERY
+        WHERE PRICE = (
+            SELECT MAX(PRICE)
+            FROM MACHINERY
+        )
+    )
+);
+
+19) Retrieve the product names and their corresponding wholesalers (Using JOIN)
+
+ANS. :
+
+SELECT P.PRODUCTNAME , W.NAME AS WHOLESALER_NAME
+FROM PRODUCT P,STORAGE S , WHOLESALER W
+WHERE P.STORAGEID = S.STORAGEID AND S.STORAGEID = W.STORAGEID;
+
+20) List all factory names along with their employee where the factory's license ID is 'LIC123'. 
+
+ANS. :
+
+SELECT F.NAME AS FACTORY_NAME, E.FULLNAME AS EMPLOYEE_NAME
+FROM FACTORY F
+JOIN EMPLOYEE E ON F.FACTORYID = E.FACTORYID
+WHERE F.LICENSEID = 'LIC123';
