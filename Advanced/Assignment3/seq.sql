@@ -1,0 +1,12 @@
+-- 1) Create sequence to generate PatientID and use the same while entering data into Patient Master Table.
+
+    CREATE SEQUENCE SQPATIENT
+    MINVALUE 1
+    START WITH 1
+    INCREMENT BY 1
+    NOCACHE;
+
+    -- Insertion
+
+    INSERT INTO PATIENTMASTER VALUES (SQPATIENT.NEXTVAL,'FARHAN',101,1001,'08-AUG-2025',NULL);
+    INSERT INTO PATIENTMASTER VALUES (SQPATIENT.NEXTVAL,'HRITHIK',101,1001,'08-AUG-2025',NULL);
